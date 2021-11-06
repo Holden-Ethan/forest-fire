@@ -1,0 +1,2 @@
+texture:tree.png
+fire_resistance:5

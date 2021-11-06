@@ -1,0 +1,3 @@
+Texture:temp.png
+Fire_barrier:0
+Can_vehicles_use:no
