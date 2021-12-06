@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"maven.view": "hierarchical",
+		"java.project.referencedLibraries": [
+			"lib/**/*.jar",
+			"c:\\Users\\ethan\\Downloads\\litiengine-sdk-v0.5.0-beta-win\\engine\\litiengine-v0.5.0-beta.jar"
+		]
+	}
+}
