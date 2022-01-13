@@ -8,13 +8,11 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.Color;
-import java.awt.Robot;
 
 
 import G.fire;
 import G.start;
 import G.world;
-import UI.*;
 
 //import org.graalvm.compiler.asm.amd64.AMD64Address.Scale;
 
@@ -48,9 +46,7 @@ public class IM implements KeyListener, MouseListener, MouseMotionListener, Mous
     public void mouseDragged(MouseEvent e) {
         // TODO Auto-generated method stub
        
-       if(mcb == 1 && !UIdistributor.checkclick(e.getX(),e.getY())){
-        UIdistributor.mapclick((int)((((e.getX()-tox)/scale))/2),(int)((((e.getY()-toy)/scale))/2), rotation);
-       }
+      
        if(mcb == 3){
         
         tox += e.getX() - mdx;
@@ -99,7 +95,7 @@ public class IM implements KeyListener, MouseListener, MouseMotionListener, Mous
         lastclick[e.getButton()][1] = e.getY();
         System.out.println(e.getButton());
         // TODO Auto-generated method stub
-        if(e.getButton()==1 && mcb == 1){
+        if(e.getButton()==1){
         if(!UIdistributor.checkclick(e.getX(),e.getY())){
             UIdistributor.mapclick((int)((((e.getX()-tox)/scale))/2),(int)((((e.getY()-toy)/scale))/2), rotation);
             if(UIdistributor.apparatusclick(e.getX(), e.getY()))UIdistributor.selectedApparatus = null;
@@ -107,7 +103,7 @@ public class IM implements KeyListener, MouseListener, MouseMotionListener, Mous
         }
         if(UIdistributor.selectedApparatus != null && e.getButton()==3){
             start.r.addbutton(e.getX(), e.getY(), "go here", imagegenerator.button(new Color(100 ,100, 100), "go here", 30, 88, 10, 22, 20));
-            start.r.addbutton(e.getX(), e.getY()+35, "drop here", imagegenerator.button(new Color(100 ,100, 100), "drop here", 30, 95, 10, 22, 20));
+            start.r.addbutton(e.getX(), e.getY()+35, UIdistributor.selectedApparatus.action, imagegenerator.button(new Color(100 ,100, 100), UIdistributor.selectedApparatus.action, 30, 95, 10, 22, 20));
 
         }
         dragged = false;
