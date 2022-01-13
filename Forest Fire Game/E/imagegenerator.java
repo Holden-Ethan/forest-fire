@@ -2,6 +2,7 @@ package E;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.Font;
@@ -18,10 +19,14 @@ public class imagegenerator {
     static int random(int range) {
         return ThreadLocalRandom.current().nextInt(range);
     }
+
+
     public static BufferedImage button(Color color, String text, int height, int width, int xoffset, int yoffset, int fontsize) {
-        BufferedImage button = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage button = new BufferedImage(width+5, height+5, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = button.createGraphics();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setColor(new Color(color.getRed()-50,color.getGreen()-50,color.getBlue()-50));
+        g2d.fillRect(0+5, 0+5, width, height);   
         g2d.setColor(color);
         g2d.fillRect(0, 0, width, height);        
         g2d.setColor(new Color(color.getRed()-50,color.getGreen()-50,color.getBlue()-50));
@@ -30,6 +35,28 @@ public class imagegenerator {
         g2d.drawString(text, xoffset, yoffset);
         return button;
     }
+
+    public static BufferedImage buttonimage(Color color, BufferedImage image, int height, int width, int xoffset, int yoffset, int fontsize) {
+        BufferedImage button = new BufferedImage(width+5, height+5, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = button.createGraphics();
+
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        g2d.setColor(new Color(color.getRed()-50,color.getGreen()-50,color.getBlue()-50));
+        g2d.fillRect(0+5, 0+5, width, height);   
+
+        g2d.setColor(color);
+        g2d.fillRect(0, 0, width, height);
+
+        g2d.setColor(new Color(color.getRed()-50,color.getGreen()-50,color.getBlue()-50));
+        Font font = new Font("Arial", Font.PLAIN, fontsize);
+        g2d.setFont(font);
+
+        g2d.drawImage(image, xoffset, yoffset, null);
+        return button;
+    }
+
+
     public static BufferedImage rotate(BufferedImage image, int r) {
         final double rads = Math.toRadians(90*r);
         final double sin = Math.abs(Math.sin(rads));
@@ -45,7 +72,9 @@ public class imagegenerator {
         rotateOp.filter(image,rotatedImage);
         return rotatedImage;
     }
-    public static BufferedImage rotatedeg(BufferedImage image, int angle) {
+
+
+    public static BufferedImage ajustApparatus(BufferedImage image, int angle, double ox, double oy) {
         final double rads = Math.toRadians(-angle-180);
         final double sin = Math.abs(Math.sin(rads));
         final double cos = Math.abs(Math.cos(rads));
@@ -53,13 +82,15 @@ public class imagegenerator {
         final int h = (int) Math.floor(image.getHeight() * cos + image.getWidth() * sin);
         final BufferedImage rotatedImage = new BufferedImage(w, h, image.getType());
         final AffineTransform at = new AffineTransform();
-        at.translate(w / 2, h / 2);
+        at.translate((w / 2) +10, h / 2);
         at.rotate(rads,0, 0);
-        at.translate(-image.getWidth() / 2, -image.getHeight() / 2);
+        at.translate((-image.getWidth() / 2)-ox, (-image.getHeight() / 2)-oy);
         final AffineTransformOp rotateOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
         rotateOp.filter(image,rotatedImage);
         return rotatedImage;
     }
+
+
     public static BufferedImage landgen() {
     //draw pretty stuff delete the "false" if you want to see
         if(false)return prettyimage();
@@ -148,6 +179,8 @@ public class imagegenerator {
 
             return map;
     }
+
+
     public static BufferedImage prettyimage() {
         BufferedImage map = new BufferedImage(world.mapgrid.length*2, world.mapgrid[0].length*2, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = map.createGraphics();

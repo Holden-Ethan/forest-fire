@@ -53,10 +53,11 @@ public class fire extends Thread{
         while (true) { 
             Ftickstart = System.currentTimeMillis();
             if(Ftickstart-Ftickend>=1000){
+                simulate();
                 //System.out.println(1000/(Ftickstart-Ftickend));
             Ftickend = System.currentTimeMillis();
                 //if(simulate){//|| !start.debug
-                    simulate();
+                    
 
                 //}
                 simulate = false;
@@ -103,7 +104,7 @@ public class fire extends Thread{
                         case "grass":
                         int rx = random.nextInt(3)-1;
                         int ry = random.nextInt(3)-1;
-                        if(x+rx >= 0 && y+ry >= 0 && y+ry <= world.mapsize && x+rx <= world.mapsize && world.mapgrid[x+rx][y+ry].gID != "water" && tempmapgrid[x+rx][y+ry] == 0){
+                        if(x+rx >= 0 && y+ry >= 0 && y+ry <= world.mapsize && x+rx <= world.mapsize && world.mapgrid[x+rx][y+ry].gID != "water" && world.mapgrid[x+rx][y+ry].gID != "dirt" && tempmapgrid[x+rx][y+ry] == 0){
                             g2d.setColor(new Color(224 + random.nextInt(15), 40, 48));
                             g2d.fillRect(
                                 (int) (x+rx),
@@ -132,7 +133,7 @@ public class fire extends Thread{
                         case "brush":
                         rx = random.nextInt(3)-1;
                         ry = random.nextInt(3)-1;
-                        if(x+rx >= 0 && y+ry >= 0 && y+ry <= world.mapsize && x+rx <= world.mapsize && world.mapgrid[x+rx][y+ry].gID != "water" && tempmapgrid[x+rx][y+ry] == 0){
+                        if(x+rx >= 0 && y+ry >= 0 && y+ry <= world.mapsize && x+rx <= world.mapsize && world.mapgrid[x+rx][y+ry].gID != "water" && world.mapgrid[x+rx][y+ry].gID != "dirt" && tempmapgrid[x+rx][y+ry] == 0){
                             g2d.setColor(new Color(224 + random.nextInt(15), 40, 48));
                             g2d.fillRect(
                                 (int) (x+rx),
@@ -159,9 +160,13 @@ public class fire extends Thread{
         //tree
         //can spread to far tiles
                         case "tree":
-                        rx = random.nextInt(5)-2;
-                        ry = random.nextInt(5)-2;
-                        if(x+rx >= 0 && y+ry >= 0 && y+ry <= world.mapsize && x+rx <= world.mapsize && world.mapgrid[x+rx][y+ry].gID != "water" && tempmapgrid[x+rx][y+ry] == 0){
+                        rx = random.nextInt(3)-1;
+                        ry = random.nextInt(3)-1;
+                        if(x+rx >= 0 && y+ry >= 0 && y+ry <= world.mapsize && x+rx <= world.mapsize && world.mapgrid[x+rx][y+ry].gID != "water" && world.mapgrid[x+rx][y+ry].gID != "dirt" && tempmapgrid[x+rx][y+ry] == 0){
+                            if(random.nextInt(3) == 0){
+                                rx =+ random.nextInt(3)-1;
+                                ry =+ random.nextInt(3)-1;
+                            }
                             g2d.setColor(new Color(224 + random.nextInt(15), 40, 48));
                             g2d.fillRect(
                                 (int) (x+rx),

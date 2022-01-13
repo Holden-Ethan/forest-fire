@@ -2,11 +2,11 @@ package E;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 import G.fire;
 import G.start;
 import G.world;
-import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
 
 
@@ -82,6 +82,7 @@ public class UIdistributor {
                 buttons.clear();
                 world.start(500);
                 world.running = true;
+                start.r.addbutton(100, 160, "buy bulldozer", imagegenerator.buttonimage(new Color(100 ,100, 100), load.image("Bulldozer.png"), 80, 80, 20, 10, 10));
                 break;
 
             case "exit":
@@ -90,21 +91,45 @@ public class UIdistributor {
 
             case "settings":
                 buttons.clear();
-                start.r.addbutton(100, 160, "fullscrean", imagegenerator.button(new Color(180 ,180, 180), "Settings", 50, 250, 52, 40, 40));
+                //start.r.addbutton(100, 160, "fullscrean", imagegenerator.button(new Color(180 ,180, 180), "fullscrean", 50, 250, 52, 40, 40));
                 break;
-            case "drop here":
-                selectedApparatus.autopilot = true;
+            case "drop water":
+                selectedApparatus.active = true;
                 selectedApparatus.xdest = (int) (((IM.lastclick[3][0]-IM.tox)/IM.scale));
                 selectedApparatus.ydest = (int) (((IM.lastclick[3][1]-IM.toy)/IM.scale));
                 start.r.removebutton("go here");
-                start.r.removebutton("drop here");
+                start.r.removebutton("drop water");
+                break;
+            case "cut fire line":
+                selectedApparatus.active = true;
+                selectedApparatus.xdest = (int) (((IM.lastclick[3][0]-IM.tox)/IM.scale));
+                selectedApparatus.ydest = (int) (((IM.lastclick[3][1]-IM.toy)/IM.scale));
+                start.r.removebutton("go here");
+                start.r.removebutton("cut fire line");
                 break;
             case "go here":
+                selectedApparatus.active = false;
                 selectedApparatus.xdest = (int) (((IM.lastclick[3][0]-IM.tox)/IM.scale));
                 selectedApparatus.ydest = (int) (((IM.lastclick[3][1]-IM.toy)/IM.scale));
                 start.r.removebutton("go here");
-                start.r.removebutton("drop here");
+                start.r.removebutton("drop water");
+                start.r.removebutton("cut fire line");
+
                 break;
+            case "buy bulldozer":
+                world.apparatus.add(new apparatus(
+                    "B" + ThreadLocalRandom.current().nextInt(100), //callsigh
+                    "Bulldozer", //type
+                    "cut fire line", //action
+                    load.image("Bulldozer.png"), //image
+                    ThreadLocalRandom.current().nextInt(world.mapsize), //x cord
+                    0, //y cord
+                    0, //heding
+                    2, //max speed
+                    .01, //max acceleration
+                    0 //max water
+                ));
+
             default:
               // code block
           }

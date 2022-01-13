@@ -4,6 +4,8 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.plaf.ColorUIResource;
@@ -20,18 +22,29 @@ public class compile {
         if(world.mapgrid != null && world.mapgrid[0][0] != null){
             g.drawImage(map,(int) IM.tox,(int) IM.toy, (int)(world.mapgrid.length*2*s),(int)(world.mapgrid[0].length*2*s), null);
         }
-//draws aircraft
+//draws apparatus
+        {   
+        final BufferedImage renderd = new BufferedImage(display.c.getWidth(), display.c.getHeight(), 2);
         for (int i = 0; i < world.apparatus.size(); i++) {
-            BufferedImage apparatus = imagegenerator.rotatedeg(
-                world.apparatus.get(i).apparatusImage, 
-                (int) world.apparatus.get(i).heading);
-            g.drawImage(apparatus,
-                (int) ((world.apparatus.get(i).x * s) + IM.tox) - (int) (apparatus.getWidth()/2), 
-                (int) ((world.apparatus.get(i).y * s) + IM.toy) - (int) (apparatus.getHeight()/2),
-                (int) (apparatus.getWidth()), (int) (apparatus.getHeight()), 
-            null);
+            BufferedImage image = world.apparatus.get(i).apparatusImage;
+            final double rads = Math.toRadians(-world.apparatus.get(i).heading-180);
+            final double sin = Math.abs(Math.sin(rads));
+            final double cos = Math.abs(Math.cos(rads));
+            final int w = (int) Math.floor(image.getWidth() * cos + image.getHeight() * sin);
+            final int h = (int) Math.floor(image.getHeight() * cos + image.getWidth() * sin);
+            final AffineTransform at = new AffineTransform();
+            at.translate((w / 2), h / 2);
+            at.translate(((world.apparatus.get(i).x * s) + IM.tox) - (image.getWidth() / 2),((world.apparatus.get(i).y * s) + IM.toy) - (image.getHeight() / 2));
+            at.rotate(rads,0, 0);
+            at.translate(-image.getWidth() / 2, -image.getHeight() / 2);
+            //at.scale(.75, .75);
+            final AffineTransformOp rotateOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+            rotateOp.filter(image,renderd);
             
         }
+        g.drawImage(renderd,0,0,
+        null);
+    }
     }
 
 //draws box in the uper righthand corner

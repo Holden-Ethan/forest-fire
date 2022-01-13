@@ -11,7 +11,7 @@ public class start {
       
       System.out.println(Thread.currentThread());
       im = new IM();
-      r =  new  display (1000,700,"Engine",im,3);
+      r =  new  display (1440,700,"Engine",im,3);
 		  r.setName("renderer");
       r.start();
 //main menu button

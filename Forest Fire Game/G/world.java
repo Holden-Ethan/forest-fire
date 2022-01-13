@@ -26,6 +26,7 @@ public class world {
         apparatus.add(new apparatus(
             "H" + ThreadLocalRandom.current().nextInt(100), //callsigh
             "bell 204", //type
+            "drop water", //action
             load.image("Bell 205.png"), //image
             100, //x cord
             100, //y cord
@@ -34,17 +35,7 @@ public class world {
             .01, //max acceleration
             9 //max water
         ));
-        apparatus.add(new apparatus(
-            "B" + ThreadLocalRandom.current().nextInt(100), //callsigh
-            "Bulldozer", //type
-            load.image("Bell 205.png"), //image
-            100, //x cord
-            100, //y cord
-            0, //heding
-            2, //max speed
-            .01, //max acceleration
-            0 //max water
-        ));
+        
 
         
         mapgrid = new tile[size][size];
@@ -131,7 +122,7 @@ public class world {
             switch(apparatus.get(i).type) {
                 case "bell 204":
                     //apparatus movment
-                    move(ap, atDestination);
+                    fly(ap, atDestination);
 
                     //pick up water
                     fillWater(ap, atDestination);
@@ -147,6 +138,7 @@ public class world {
                 break;
                 case "Bulldozer":
                     move(ap, atDestination);
+                    bulldoze(ap, atDestination);
                 break;
                 default:
                   // code block
@@ -155,12 +147,15 @@ public class world {
         }    
     }
     static void bulldoze(apparatus ap, boolean atDestination){
-    
+        if(ap.active && mapgrid[(int)ap.x][(int)ap.y].gID != "water"){
+            mapgrid[(int)ap.x][(int)ap.y].gID = "dirt";
+            compile.map.setRGB((int)ap.x, (int)ap.y, new Color(150, 95, 10).getRGB());
+        }
     }
 
 
     static void autopilotGoToWater(apparatus ap, boolean atDestination){
-        if(atDestination && ap.autopilot && ap.water == 0){
+        if(atDestination && ap.active && ap.water == 0){
             int xs = (int) ap.x;
             int ys = (int) ap.y;
             int closeX = xs;
@@ -185,7 +180,7 @@ public class world {
     
     
     static void autopilotGoToFire(apparatus ap, boolean atDestination){
-        if(atDestination && ap.autopilot && ap.water != 0){
+        if(atDestination && ap.active && ap.water != 0){
             int xs = (int) ap.x;
             int ys = (int) ap.y;
             int closeX = xs;
@@ -194,7 +189,7 @@ public class world {
             for (int ox = xs-50; ox < xs+50; ox++) {
                 for (int oy = ys-50; oy < ys+50; oy++) {
                     if(fire.active[ox][oy] && Math.sqrt((xs-ox)*(xs-ox)+(ys-oy)*(ys-oy)) < closeDist ){
-                        closeDist = Math.sqrt((xs-ox)*(xs-ox)+(ys-oy)*(ys-oy)) + checkNeighbor(ox, oy);
+                        closeDist = Math.sqrt((xs-ox)*(xs-ox)+(ys-oy)*(ys-oy));// + checkNeighbor(ox, oy);
                         closeX = ox;
                         closeY = oy;
                     }
@@ -242,8 +237,7 @@ public class world {
     }
 
 
-    static void move(apparatus ap, boolean atDestination){
-        System.out.println(ap.speed);
+    static void fly(apparatus ap, boolean atDestination){
         if(!atDestination){
         if(ap.velocity < 1)ap.velocity += ap.maxacceleration;
         ap.heading = (int) Math.toDegrees(Math.atan2((ap.xdest)-ap.x, (ap.ydest)-ap.y));
@@ -251,11 +245,18 @@ public class world {
         ap.y += Math.cos(Math.toRadians(ap.heading))*(ap.speed*0.017*ap.velocity);
         }
         if(Math.sqrt(((ap.x-ap.xdest)*(ap.x-ap.xdest))+((ap.y-ap.ydest)*(ap.y-ap.ydest))) < (ap.velocity * ap.velocity)/(2*ap.maxacceleration)){
-            System.out.println((ap.velocity * ap.velocity)/(2*ap.maxacceleration));
             ap.velocity -= ap.maxacceleration*2;
         }
     }
-
+    
+    static void move(apparatus ap, boolean atDestination){
+        if(!atDestination){
+        if(ap.velocity < 1)ap.velocity += ap.maxacceleration;
+        ap.heading = (int) Math.toDegrees(Math.atan2((ap.xdest)-ap.x, (ap.ydest)-ap.y));
+        ap.x += Math.sin(Math.toRadians(ap.heading))*(ap.speed*0.017*(ap.active ? .5 : 1));
+        ap.y += Math.cos(Math.toRadians(ap.heading))*(ap.speed*0.017*(ap.active ? .5 : 1));
+        }
+    }
 
     static void fillWater(apparatus ap, boolean atDestination){
         if(

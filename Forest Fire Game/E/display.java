@@ -4,22 +4,13 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.PopupMenu;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import G.start;
 import G.world;
-
 import java.awt.Font;
-import java.awt.Cursor;
-import java.awt.Toolkit;
 import java.awt.RenderingHints;
 
 public class display extends Thread {
@@ -32,7 +23,7 @@ public class display extends Thread {
 	double FPS = -1;
     float defaultw, defaulth;
     JFrame jf;
-    Canvas c;
+    static Canvas c;
     BufferStrategy bs;
     Graphics2D g;
     IM im;
@@ -109,8 +100,8 @@ public class display extends Thread {
 		}
 		g = (Graphics2D)bs.getDrawGraphics();
         g.clearRect(0, 0, width, height);
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		//g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_DEFAULT);
+		//g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_DEFAULT);
 		
 //display stand-alone images
 		compile.images(g, images,(int)d.getWidth(),(int)d.getHeight());
@@ -129,7 +120,7 @@ public class display extends Thread {
 		g.setColor(new Color(120,120,120)); 
       	g.setFont(font);
         g.drawString("FPS: "+ FPS, 5, 16);
-		
+		g.fillRect(20, 20, 2, 2);
 
 		bs.show();
 		g.dispose();

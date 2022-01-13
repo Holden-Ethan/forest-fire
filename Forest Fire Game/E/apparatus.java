@@ -2,14 +2,15 @@ package E;
 import java.awt.image.BufferedImage;
 
 public class apparatus {
-    public String name, type;
+    public String name, type, action;
     public int xdest, ydest, speed, maxspeed, heading, water, maxWater;
     public double x, y, velocity, maxacceleration;
-    public boolean autopilot;
+    public boolean active;
     public BufferedImage apparatusImage;
     public apparatus (
         String name, 
-        String type, 
+        String type,
+        String action, 
         BufferedImage apparatusImage, 
         double x, 
         double y, 
@@ -22,15 +23,16 @@ public class apparatus {
         ){
         this.name = name;
         this.type = type;
+        this.action = action;
         this.apparatusImage = apparatusImage;
         this.x = x;
         this.y = y;
         this.xdest = (int)x;
-        this.xdest = (int)y;
+        this.ydest = (int)y;
         this.speed = speed;
         this.heading = heading;
         this.maxWater = maxWater;
-        this.autopilot = false;
+        this.active = false;
         this.velocity = 0;
         this.maxacceleration = maxacceleration;
     }
